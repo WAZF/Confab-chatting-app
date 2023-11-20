@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
@@ -12,6 +13,7 @@ import '../services/navigation_service.dart';
 
 //Pages
 import '../pages/chat_page.dart';
+import '../pages/user_profile.dart';
 
 //Widgets
 import '../widgets/top_bar.dart';
@@ -54,33 +56,64 @@ class _ChatsPageState extends State<ChatsPage> {
   }
 
   Widget _buildUI() {
-    return Builder(
-      builder: (BuildContext _context) {
-        _pageProvider = _context.watch<ChatsPageProvider>();
-        return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: _deviceWidth * 0.03,
-            vertical: _deviceHeight * 0.02,
-          ),
-          height: _deviceHeight * 0.98,
-          width: _deviceWidth * 0.97,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TopBar(
-                'Chats',
-                
+  return Builder(
+    builder: (BuildContext _context) {
+      _pageProvider = _context.watch<ChatsPageProvider>();
+      return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: _deviceWidth * 0.03,
+          vertical: _deviceHeight * 0.02,
+        ),
+        height: _deviceHeight * 0.98,
+        width: _deviceWidth * 0.97,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TopBar(
+              'Chats',
+              secondaryAction: Consumer<AuthenticationProvider>(
+                builder: (context, authProvider, _) {
+                  return FutureBuilder<String?>(
+                    future: authProvider.getCurrentUserImageURL(),
+                    builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // Show a loading indicator while fetching the image URL
+                      } else {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserPage(), // Replace with your UserProfile page
+                                ),
+                              );
+                            },
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(snapshot.data!), // Use the retrieved URL
+                              radius: 15,
+                            ),
+                          );
+                        } else {
+                          return Text('No Image'); // Placeholder if no image URL available
+                        }
+                      }
+                    },
+                  );
+                },
               ),
-              
-              _chatsList(),
-            ],
-          ),
-        );
-      },
-    );
-  }
+            ),
+            _chatsList(),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+
 
   Widget _chatsList() {
     List<Chat>? _chats = _pageProvider.chats;

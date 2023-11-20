@@ -187,11 +187,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _verifyEmailButton() {
-    return RoundedButton(
-      name: "Verify Email",
-      height: _deviceHeight * 0.065,
-      width: _deviceWidth * 0.65,
+ Widget _verifyEmailButton() {
+  return Container(
+    height: _deviceHeight * 0.065,
+    width: _deviceWidth * 0.65,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+      color: Color.fromARGB(255, 174, 0, 255), // Replace with your desired button color
+    ),
+    child: ElevatedButton(
       onPressed: () async {
         try {
           // Send email verification
@@ -203,8 +207,27 @@ class _RegisterPageState extends State<RegisterPage> {
           print("Error sending email verification: $e");
         }
       },
-    );
-  }
+      child: Text(
+        "Verify Email",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15), // Same radius as the container
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        elevation: MaterialStateProperty.all<double>(0), // No shadow
+      ),
+    ),
+  );
+}
+
 
   void _showEmailVerificationMessage() {
     showDialog(

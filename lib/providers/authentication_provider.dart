@@ -1,5 +1,6 @@
 //Packages
 //import 'package:confab/models/chat_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +20,10 @@ class AuthenticationProvider extends ChangeNotifier {
   late final GoogleSignIn _googleSignIn;
   late final NavigationService _navigationService;
   late final DatabaseService _databaseService;
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  User? get currentUser => _firebaseAuth.currentUser;
 
   late ChatUser user;
 
@@ -105,10 +110,19 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> sendEmailVerification() async {
-    // Implementation of sending email verification
-    // Use _auth.currentUser to get the current user
-    // Call sendEmailVerification() on the user
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      print('Email verification sent to ${user.email}');
+    } else {
+      print('User is either null or email is already verified');
+    }
+  } catch (e) {
+    print('Error sending email verification: $e');
+    // Handle the error, show a message to the user, etc.
   }
+}
 
   Future<String?> registerUserUsingEmailAndPassword(
       String _email, String _password) async {
@@ -131,6 +145,21 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
   
-  
-  
+  Future<String?> getCurrentUserImageURL() async {
+    User? currentUser = _auth.currentUser;
+
+    if (currentUser != null) {
+      // Fetch the user data from the database
+      DocumentSnapshot userData = await _databaseService.getUser(currentUser.uid);
+      String? imageURL = userData.get('image') as String?;
+      return imageURL;
+    }
+
+    return null; // Return null if the user is not logged in
+  }
+
+  Future<User?> getCurrentUser() async {
+    return _firebaseAuth.currentUser;
+  }
+
 }
