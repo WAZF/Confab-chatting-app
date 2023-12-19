@@ -14,7 +14,7 @@ Key Features:
    ->Search users with user name
 
   
-![Screenshot_1700241397](https://github.com/WAZF/Confab-chatting-app/assets/106472678/99c57f6a-cf7b-4467-8024-30e0f4bb296e.png | width=100)
+![Screenshot_1700241397](https://github.com/WAZF/Confab-chatting-app/assets/106472678/99c57f6a-cf7b-4467-8024-30e0f4bb296e)
 ![Screenshot_1700241404](https://github.com/WAZF/Confab-chatting-app/assets/106472678/cfeac721-6581-42ff-867f-2417cc9ce7f7)
 ![Screenshot_1700241433](https://github.com/WAZF/Confab-chatting-app/assets/106472678/6ab2239b-b209-49cb-9612-6723152988f0)
 ![Screenshot_1700241436](https://github.com/WAZF/Confab-chatting-app/assets/106472678/7089bb87-fe9d-4e3c-9780-6ee2e44ee3f7)
